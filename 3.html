@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>AI MV Studio｜AI 音樂影片製作招商平台</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #000;
+      overflow-x: hidden;
+      color: white;
+    }
+
+    /* ===== 背景影片 ===== */
+
+    .video-container {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -10;
+      background: #000;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 177.77777778vh;
+      height: 56.25vw;
+      min-width: 100%;
+      min-height: 100%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    /* ===== 深色遮罩 ===== */
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(0,0,0,0.55),
+          rgba(0,0,0,0.72)
+        );
+      z-index: -5;
+    }
+
+    /* ===== 高級漸層 Glow ===== */
+
+    .glow {
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      border-radius: 999px;
+      filter: blur(120px);
+      opacity: 0.35;
+      animation: floatGlow 12s ease-in-out infinite;
+    }
+
+    .glow-blue {
+      background: #2563eb;
+      top: -200px;
+      left: -150px;
+    }
+
+    .glow-purple {
+      background: #7c3aed;
+      bottom: -250px;
+      right: -150px;
+    }
+
+    @keyframes floatGlow {
+      0%,100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-30px);
+      }
+    }
+
+    /* ===== Glassmorphism ===== */
+
+    .glass {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+    }
+
+    /* ===== 打字機 ===== */
+
+    .typing::after {
+      content: "|";
+      animation: blink 0.8s infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    /* ===== 漸層文字 ===== */
+
+    .gradient-text {
+      background: linear-gradient(
+        90deg,
+        #ffffff,
+        #93c5fd,
+        #a78bfa
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* ===== 卡片 Hover ===== */
+
+    .hover-card {
+      transition: all 0.45s ease;
+    }
+
+    .hover-card:hover {
+      transform: translateY(-10px);
+      border-color: rgba(255,255,255,0.25);
+      box-shadow:
+        0 20px 60px rgba(37,99,235,0.2),
+        0 0 30px rgba(124,58,237,0.15);
+    }
+
+    /* ===== CTA 按鈕 ===== */
+
+    .cta-btn {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.35s ease;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-3px);
+      box-shadow:
+        0 0 40px rgba(16,185,129,0.45);
+    }
+
+    .cta-btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(255,255,255,0.15),
+        transparent
+      );
+      transform: translateX(-100%);
+      transition: 0.6s;
+    }
+
+    .cta-btn:hover::before {
+      transform: translateX(100%);
+    }
+
+    /* ===== Reveal ===== */
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 1s ease;
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== Navbar ===== */
+
+    .navbar-scroll {
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- 背景影片 -->
+  <div class="video-container">
+
+    <!-- 
+      autoplay=1 自動播放
+      mute=1 靜音（瀏覽器才允許自動播放）
+      loop=1 重播
+      playlist=影片ID（YouTube loop 必須）
+      controls=0 隱藏控制列
+      showinfo=0
+      modestbranding=1
+    -->
+
+    <iframe
+      src="https://www.youtube.com/embed/LwLXRVJvMN0?autoplay=1&mute=1&loop=1&playlist=LwLXRVJvMN0&controls=0&showinfo=0&rel=0&modestbranding=1"
+      title="AI MV Background Video"
+      frameborder="0"
+      allow="autoplay; fullscreen"
+      allowfullscreen>
+    </iframe>
+
+  </div>
+
+  <!-- 深色遮罩 -->
+  <div class="overlay"></div>
+
+  <!-- Glow -->
+  <div class="glow glow-blue"></div>
+  <div class="glow glow-purple"></div>
+
+  <!-- Navbar -->
+  <nav id="navbar"
+       class="fixed top-0 left-0 w-full z-50 transition-all duration-300">
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+      <div class="flex items-center justify-between h-20">
+
+        <div class="font-black text-2xl tracking-tight">
+          AI MV<span class="text-blue-400">.</span>Studio
+        </div>
+
+        <div class="hidden md:flex items-center gap-10 text-sm font-medium text-white/80">
+
+          <a href="#about" class="hover:text-white transition">
+            關於我們
+          </a>
+
+          <a href="#service" class="hover:text-white transition">
+            服務方案
+          </a>
+
+          <a href="#cases" class="hover:text-white transition">
+            成功案例
+          </a>
+
+          <a href="#contact" class="hover:text-white transition">
+            合作招商
+          </a>
+
+        </div>
+
+        <button id="menuBtn"
+                class="md:hidden text-2xl">
+          ☰
+        </button>
+
+      </div>
+
+      <!-- 手機版 -->
+      <div id="mobileMenu"
+           class="hidden md:hidden glass rounded-2xl p-6 mb-4">
+
+        <div class="flex flex-col gap-4">
+
+          <a href="#about">關於我們</a>
+          <a href="#service">服務方案</a>
+          <a href="#cases">成功案例</a>
+          <a href="#contact">合作招商</a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </nav>
+
+  <!-- Hero -->
+  <section class="relative min-h-screen flex items-center">
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 py-32 w-full">
+
+      <div class="max-w-4xl">
+
+        <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full glass text-sm text-white/80 mb-8">
+          AI Music Video Production · Viral Marketing · Brand Growth
+        </div>
+
+        <!-- 主標題 -->
+        <h1 class="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.05] tracking-tight mb-8">
+
+          <span id="typing"
+                class="typing gradient-text">
+          </span>
+
+        </h1>
+
+        <!-- 副標 -->
+        <p class="text-xl md:text-2xl text-white/75 leading-relaxed max-w-3xl mb-8">
+          用 AI 打造具備流量、品牌力與商業轉換的 MV 內容，
+          協助企業、品牌與創作者快速進入下一代影音行銷時代。
+        </p>
+
+        <!-- 中文說明 -->
+        <p class="text-lg text-white/60 leading-relaxed max-w-2xl mb-12">
+          從 AI 音樂生成、MV 視覺設計、角色生成、分鏡腳本，到品牌行銷與社群擴散，
+          我們提供完整 AI MV 商業化解決方案。
+        </p>
+
+        <!-- CTA -->
+        <div class="flex flex-col sm:flex-row gap-5">
+
+          <a href="#contact"
+             class="cta-btn inline-flex items-center justify-center px-8 py-5 rounded-2xl bg-gradient-to-r from-blue-600 to-violet-600 text-white font-bold text-lg">
+
+            立即合作招商
+
+          </a>
+
+          <a href="#service"
+             class="glass inline-flex items-center justify-center px-8 py-5 rounded-2xl border border-white/15 text-white font-semibold hover:bg-white/10 transition">
+
+            探索 AI MV 方案
+
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- About -->
+  <section id="about"
+           class="py-28 relative">
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+      <div class="text-center mb-20 reveal">
+
+        <div class="text-blue-300 font-semibold mb-4">
+          About AI MV Studio
+        </div>
+
+        <h2 class="text-4xl md:text-5xl font-black mb-8">
+          新世代 AI MV 商業內容工廠
+        </h2>
+
+        <p class="text-white/70 text-lg max-w-3xl mx-auto leading-relaxed">
+          AI MV Studio 專注於 AI 音樂影片製作、品牌影音行銷與商業招商合作，
+          結合生成式 AI、音樂視覺、短影音流量與品牌成長策略，
+          協助企業快速建立具有話題性與傳播力的影音內容。
+        </p>
+
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+        <div class="glass rounded-3xl p-8 hover-card reveal">
+
+          <div class="text-5xl font-black text-blue-400 mb-4">
+            AI
+          </div>
+
+          <h3 class="text-xl font-bold mb-4">
+            AI 音樂生成
+          </h3>
+
+          <p class="text-white/65">
+            快速生成符合品牌定位的 AI 音樂與聲音風格。
+          </p>
+
+        </div>
+
+        <div class="glass rounded-3xl p-8 hover-card reveal">
+
+          <div class="text-5xl font-black text-violet-400 mb-4">
+            MV
+          </div>
+
+          <h3 class="text-xl font-bold mb-4">
+            AI MV 製作
+          </h3>
+
+          <p class="text-white/65">
+            建立具未來感與視覺衝擊的 AI 音樂影片。
+          </p>
+
+        </div>
+
+        <div class="glass rounded-3xl p-8 hover-card reveal">
+
+          <div class="text-5xl font-black text-emerald-400 mb-4">
+            Viral
+          </div>
+
+          <h3 class="text-xl font-bold mb-4">
+            社群流量擴散
+          </h3>
+
+          <p class="text-white/65">
+            串接 TikTok、Reels、YouTube Shorts 內容策略。
+          </p>
+
+        </div>
+
+        <div class="glass rounded-3xl p-8 hover-card reveal">
+
+          <div class="text-5xl font-black text-pink-400 mb-4">
+            Brand
+          </div>
+
+          <h3 class="text-xl font-bold mb-4">
+            品牌商業化
+          </h3>
+
+          <p class="text-white/65">
+            讓 AI MV 成為品牌成長與招商的新入口。
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- Service -->
+  <section id="service"
+           class="py-28">
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+      <div class="text-center mb-20 reveal">
+
+        <div class="text-blue-300 font-semibold mb-4">
+          AI MV Solutions
+        </div>
+
+        <h2 class="text-4xl md:text-5xl font-black mb-8">
+          AI MV 商業服務方案
+        </h2>
+
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-8">
+
+        <div class="glass rounded-[32px] p-10 hover-card reveal">
+
+          <div class="text-sm uppercase tracking-[0.3em] text-blue-300 mb-5">
+            Starter
+          </div>
+
+          <h3 class="text-3xl font-black mb-5">
+            AI MV 基礎方案
+          </h3>
+
+          <p class="text-white/70 mb-8 leading-relaxed">
+            適合品牌測試 AI MV 行銷與社群流量成效。
+          </p>
+
+          <ul class="space-y-4 text-white/75">
+
+            <li>✓ AI 音樂生成</li>
+            <li>✓ AI MV 製作</li>
+            <li>✓ Shorts / Reels 版本</li>
+            <li>✓ 社群發布建議</li>
+
+          </ul>
+
+        </div>
+
+        <div class="glass rounded-[32px] p-10 border border-blue-400/40 hover-card reveal">
+
+          <div class="text-sm uppercase tracking-[0.3em] text-violet-300 mb-5">
+            Premium
+          </div>
+
+          <h3 class="text-3xl font-black mb-5">
+            品牌 AI MV 方案
+          </h3>
+
+          <p class="text-white/70 mb-8 leading-relaxed">
+            為企業與品牌打造完整 AI 音樂行銷內容。
+          </p>
+
+          <ul class="space-y-4 text-white/75">
+
+            <li>✓ 品牌腳本設計</li>
+            <li>✓ AI 角色生成</li>
+            <li>✓ 高端視覺特效</li>
+            <li>✓ 社群擴散策略</li>
+
+          </ul>
+
+        </div>
+
+        <div class="glass rounded-[32px] p-10 hover-card reveal">
+
+          <div class="text-sm uppercase tracking-[0.3em] text-emerald-300 mb-5">
+            Enterprise
+          </div>
+
+          <h3 class="text-3xl font-black mb-5">
+            AI MV 招商合作
+          </h3>
+
+          <p class="text-white/70 mb-8 leading-relaxed">
+            結合 AI 影音、品牌置入與流量變現策略。
+          </p>
+
+          <ul class="space-y-4 text-white/75">
+
+            <li>✓ 品牌聯名合作</li>
+            <li>✓ 流量投放策略</li>
+            <li>✓ AI IP 建立</li>
+            <li>✓ 長期商業合作</li>
+
+          </ul>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- Cases -->
+  <section id="cases"
+           class="py-28">
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+      <div class="text-center mb-20 reveal">
+
+        <div class="text-blue-300 font-semibold mb-4">
+          Success Cases
+        </div>
+
+        <h2 class="text-4xl md:text-5xl font-black mb-8">
+          AI MV 成功案例
+        </h2>
+
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+
+        <div class="glass rounded-[32px] overflow-hidden hover-card reveal">
+
+          <div class="h-56 bg-gradient-to-br from-blue-600 to-violet-600"></div>
+
+          <div class="p-10">
+
+            <h3 class="text-2xl font-black mb-5">
+              AI 虛擬偶像 MV
+            </h3>
+
+            <p class="text-white/70 leading-relaxed">
+              透過 AI 角色與 MV 視覺內容，在短影音平台累積百萬級曝光。
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="glass rounded-[32px] overflow-hidden hover-card reveal">
+
+          <div class="h-56 bg-gradient-to-br from-violet-600 to-pink-500"></div>
+
+          <div class="p-10">
+
+            <h3 class="text-2xl font-black mb-5">
+              品牌 AI 音樂行銷
+            </h3>
+
+            <p class="text-white/70 leading-relaxed">
+              結合 AI 音樂與產品品牌故事，建立高話題社群傳播效應。
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- Contact -->
+  <section id="contact"
+           class="py-32 relative">
+
+    <div class="max-w-5xl mx-auto px-6 lg:px-10">
+
+      <div class="glass rounded-[40px] p-14 md:p-20 text-center reveal">
+
+        <div class="text-blue-300 font-semibold mb-5">
+          Partnership & Investment
+        </div>
+
+        <h2 class="text-4xl md:text-6xl font-black leading-tight mb-8">
+
+          一起打造下一代
+          <br>
+          AI 音樂內容生態
+
+        </h2>
+
+        <p class="text-xl text-white/70 leading-relaxed max-w-3xl mx-auto mb-12">
+
+          如果你正在尋找 AI MV 製作、品牌合作、
+          AI 內容流量變現或影音招商合作機會，
+          歡迎立即與我們聯繫。
+
+        </p>
+
+        <a href="#"
+           class="cta-btn inline-flex items-center justify-center px-10 py-5 rounded-2xl bg-gradient-to-r from-blue-600 to-violet-600 text-white font-black text-lg">
+
+          立即洽談合作
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 border-t border-white/10">
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+
+        <div>
+
+          <div class="font-black text-2xl mb-2">
+            AI MV Studio
+          </div>
+
+          <p class="text-white/50">
+            AI Music Video · Future Media · Brand Growth
+          </p>
+
+        </div>
+
+        <p class="text-white/40 text-sm">
+          © 2026 AI MV Studio. All rights reserved.
+        </p>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+  <script>
+
+    // ===== 打字機 =====
+
+    const typing = document.getElementById('typing');
+
+    const text =
+      'Next Generation AI Music Video Ecosystem';
+
+    let i = 0;
+
+    function typeEffect() {
+
+      if (i < text.length) {
+
+        typing.innerHTML += text.charAt(i);
+
+        i++;
+
+        setTimeout(typeEffect, 65);
+
+      }
+
+    }
+
+    typeEffect();
+
+    // ===== Navbar Scroll =====
+
+    const navbar = document.getElementById('navbar');
+
+    window.addEventListener('scroll', () => {
+
+      if (window.scrollY > 50) {
+
+        navbar.classList.add('navbar-scroll');
+
+      } else {
+
+        navbar.classList.remove('navbar-scroll');
+
+      }
+
+    });
+
+    // ===== 手機 Menu =====
+
+    const menuBtn = document.getElementById('menuBtn');
+
+    const mobileMenu =
+      document.getElementById('mobileMenu');
+
+    menuBtn.addEventListener('click', () => {
+
+      mobileMenu.classList.toggle('hidden');
+
+    });
+
+    // ===== Reveal =====
+
+    const reveals =
+      document.querySelectorAll('.reveal');
+
+    const observer =
+      new IntersectionObserver((entries) => {
+
+      entries.forEach(entry => {
+
+        if (entry.isIntersecting) {
+
+          entry.target.classList.add('active');
+
+        }
+
+      });
+
+    }, {
+      threshold: 0.1
+    });
+
+    reveals.forEach(reveal => {
+
+      observer.observe(reveal);
+
+    });
+
+  </script>
+
+</body>
+</html>
