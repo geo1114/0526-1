@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黃小球 科技專家與資料科學轉型顧問</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans for Display, Inter for body text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        tech: {
+                            blue: '#2563eb',    // 主色：科技藍
+                            purple: '#7c3aed',  // 輔色：高級紫
+                            mint: '#10b981',    // 點綴：薄荷綠
+                            dark: '#0f172a',    // 深色字
+                            slate: '#f8fafc',   // 霧面灰
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 5s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom Premium Stylesheets -->
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Pure CSS Radial Gradient Light Blobs (Mesh Gradients) */
+        .blob {
+            filter: blur(130px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Fine Web Grid Overlay background */
+        .grid-bg {
+            background-image: linear-gradient(to right, rgba(226, 232, 240, 0.35) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(226, 232, 240, 0.35) 1px, transparent 1px);
+            background-size: 3.5rem 3.5rem;
+        }
+
+        /* Brand Text Gradient */
+        .text-gradient {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Interactive Blinking Cursor for Typewriter */
+        .cursor-blink::after {
+            content: '|';
+            animation: blink 0.8s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Glassmorphism premium cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.85);
+            border-color: rgba(37, 99, 235, 0.25);
+            transform: translateY(-6px);
+            box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.08);
+        }
+
+        /* Seamless Navbar Blur on Scroll */
+        .nav-scrolled {
+            background: rgba(255, 255, 255, 0.75) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.05);
+            border-bottom-color: rgba(241, 245, 249, 0.8);
+        }
+    </style>
+</head>
+<body class="font-sans text-slate-600 bg-white selection:bg-blue-500/10 selection:text-tech-blue overflow-x-hidden antialiased">
+
+    <!-- Subtle Tech Canvas Particle System & Ambient Glow -->
+    <div class="fixed inset-0 w-full h-full z-0 pointer-events-none">
+        <!-- Canvas Particle System -->
+        <canvas id="tech-canvas" class="w-full h-full opacity-65"></canvas>
+        
+        <!-- Ambient Mesh Gradients -->
+        <div class="blob absolute top-[-5%] left-[-10%] w-[550px] h-[550px] bg-blue-100/45 rounded-full animate-pulse-slow"></div>
+        <div class="blob absolute bottom-[15%] right-[-10%] w-[650px] h-[650px] bg-purple-100/35 rounded-full animate-float"></div>
+        <div class="blob absolute top-[45%] left-[25%] w-[450px] h-[450px] bg-emerald-50/25 rounded-full animate-pulse-slow" style="animation-duration: 8s;"></div>
+    </div>
+
+    <!-- Navigation Bar (Glassmorphic & Responsive) -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-50 bg-white/40 border-b border-transparent transition-all duration-500">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#hero" class="flex items-center gap-2.5 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-tech-blue to-tech-purple flex items-center justify-center text-white font-extrabold shadow-lg shadow-blue-500/15 transition-transform duration-300 group-hover:scale-105">
+                    H
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-display font-bold tracking-tight text-tech-dark transition-colors group-hover:text-tech-blue text-base">黃小球</span>
+                    <span class="text-[10px] text-slate-400 font-semibold tracking-wider uppercase">AI & Data Strategy</span>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center gap-8 font-medium text-sm text-slate-600">
+                <a href="#hero" class="hover:text-tech-blue transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-tech-blue hover:after:w-full after:transition-all">首頁</a>
+                <a href="#about" class="hover:text-tech-blue transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-tech-blue hover:after:w-full after:transition-all">關於我</a>
+                <a href="#solutions" class="hover:text-tech-blue transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-tech-blue hover:after:w-full after:transition-all">AI 解決方案</a>
+                <a href="#cases" class="hover:text-tech-blue transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-tech-blue hover:after:w-full after:transition-all">實戰案例</a>
+                <a href="#blog" class="hover:text-tech-blue transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-tech-blue hover:after:w-full after:transition-all">技術部落格</a>
+                <a href="#consultation" class="hover:text-tech-blue transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-tech-blue hover:after:w-full after:transition-all">預約諮詢</a>
+            </div>
+
+            <!-- Desktop Action Button -->
+            <div class="hidden md:block">
+                <a href="#consultation" class="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-xs font-semibold text-slate-700 rounded-xl group bg-gradient-to-br from-tech-blue/30 to-tech-purple/30 hover:text-white transition-all duration-300">
+                    <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-[10px] group-hover:bg-opacity-0">
+                        立即諮詢
+                    </span>
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button id="menu-btn" class="md:hidden flex items-center text-slate-700 hover:text-tech-blue focus:outline-none z-50">
+                <i data-lucide="menu" id="menu-icon" class="w-6 h-6 transition-transform"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Drawer Menu -->
+        <div id="mobile-menu" class="hidden fixed inset-0 top-20 w-full h-[calc(100vh-80px)] bg-white/95 backdrop-blur-lg flex flex-col items-center justify-center gap-8 text-xl font-medium text-slate-700 md:hidden z-40 transition-all duration-300 opacity-0">
+            <a href="#hero" class="mobile-link hover:text-tech-blue transition-all">首頁</a>
+            <a href="#about" class="mobile-link hover:text-tech-blue transition-all">關於我</a>
+            <a href="#solutions" class="mobile-link hover:text-tech-blue transition-all">AI 解決方案</a>
+            <a href="#cases" class="mobile-link hover:text-tech-blue transition-all">實戰案例</a>
+            <a href="#blog" class="mobile-link hover:text-tech-blue transition-all">技術部落格</a>
+            <a href="#consultation" class="mobile-link hover:text-tech-blue transition-all">預約諮詢</a>
+            <a href="#consultation" class="mobile-link mt-4 px-8 py-3 bg-gradient-to-r from-tech-blue to-tech-purple text-white font-semibold rounded-xl shadow-lg shadow-blue-500/15 text-base">立即預約諮詢</a>
+        </div>
+    </nav>
+
+    <!-- 1. Hero Section -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center pt-24 overflow-hidden z-10 px-6">
+        <!-- Ambient Grid Background Overlay -->
+        <div class="absolute inset-0 grid-bg [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-40"></div>
+
+        <div class="max-w-5xl mx-auto text-center relative z-20 flex flex-col items-center">
+            <!-- Professional Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/75 border border-slate-200/80 shadow-sm backdrop-blur-md mb-8 animate-float">
+                <span class="flex h-2 w-2 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span class="text-[11px] font-bold tracking-widest text-slate-500 uppercase font-display">AI & Data Strategy Consultant</span>
+            </div>
+
+            <!-- Dynamic Typewriter Main Title -->
+            <h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-extrabold tracking-tight text-tech-dark leading-[1.15] mb-6 min-h-[120px] sm:min-h-[160px] md:min-h-[180px]">
+                <span id="typewriter" class="text-gradient cursor-blink"></span>
+            </h1>
+
+            <!-- English Premium Subtitle -->
+            <p class="text-lg md:text-xl text-slate-500 max-w-3xl font-light font-display leading-relaxed mb-4">
+                Howard helps businesses transform knowledge, workflows, and customer experience through practical AI Marketing solutions.
+            </p>
+
+            <!-- Chinese Support Sub-text -->
+            <p class="text-sm md:text-base text-slate-400 max-w-2xl font-light leading-relaxed mb-12">
+                結合 AI、資料科學與行銷策略，協助企業把分散知識、重複流程與客戶互動，轉化為可落地、可衡量、可持續成長的智慧系統。
+            </p>
+
+            <!-- CTA Multi-state Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <!-- Status Shifting Interactive Main Button -->
+                <a href="https://calendar.app.google/QZTvS9433tJHJcwT6" target="_blank" rel="noopener noreferrer" id="status-btn" class="relative group flex items-center justify-center px-8 py-4 w-64 rounded-xl border border-blue-500/25 bg-white/55 text-tech-blue font-semibold shadow-lg shadow-blue-500/5 backdrop-blur-sm transition-all duration-500 overflow-hidden">
+                    <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-emerald-500 to-teal-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
+                    <!-- Default Inner Text -->
+                    <div id="btn-default" class="flex items-center gap-2 transition-all duration-300 transform group-hover:translate-y-10 group-hover:opacity-0">
+                        <i data-lucide="sparkles" class="w-4 h-4"></i>
+                        <span>預約 AI 轉型諮詢</span>
+                    </div>
+                    <!-- Status Triggered Inner Text -->
+                    <div id="btn-hover" class="absolute flex items-center justify-center gap-2 text-white opacity-0 transform -translate-y-10 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                        <span class="flex h-2 w-2 relative">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                        </span>
+                        <span class="font-display font-semibold text-sm">Status: Ready to Connect</span>
+                    </div>
+                </a>
+
+                <!-- Secondary Button (Smooth Scroll to services) -->
+                <a href="#solutions" class="px-8 py-4 text-slate-600 hover:text-tech-blue font-semibold flex items-center gap-1.5 transition-colors duration-300">
+                    <span>探索解決方案</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Scroll down indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 opacity-40 hover:opacity-100 transition-opacity z-20">
+            <span class="text-[10px] font-display tracking-widest text-slate-400 uppercase font-bold">Scroll to Explore</span>
+            <div class="w-[22px] h-[36px] rounded-full border border-slate-300 flex justify-center p-1">
+                <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. About Me Section -->
+    <section id="about" class="relative py-28 z-20 px-6 bg-slate-50/50">
+        <div class="max-w-7xl mx-auto">
+            <!-- Section Header -->
+            <div class="text-center md:text-left mb-16">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-tech-blue text-[11px] font-bold tracking-wider uppercase mb-3 font-display">
+                    About Howard
+                </div>
+                <h2 class="text-3xl md:text-5xl font-display font-extrabold text-tech-dark tracking-tight">
+                    關於黃小球
+                </h2>
+                <p class="text-xs text-slate-400 font-semibold tracking-wider uppercase mt-1 font-display">
+                    AI Consultant / Prompt Engineer / AI Product Manager
+                </p>
+                <div class="h-1.5 w-20 bg-gradient-to-r from-tech-blue to-tech-purple rounded-full mt-4 mx-auto md:mx-0"></div>
+            </div>
+
+            <!-- Content Grid Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <!-- Left Highlights Cards (Stagger-loaded glassmorphism) -->
+                <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4 order-2 lg:order-1">
+                    <div class="glass-card p-6 rounded-2xl flex flex-col justify-between h-48">
+                        <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-tech-blue">
+                            <i data-lucide="history" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <span class="text-3xl font-display font-extrabold text-gradient">8+ 年</span>
+                            <p class="text-xs font-semibold text-slate-400 mt-1">資料科學與教學經驗</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl flex flex-col justify-between h-48">
+                        <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-tech-purple">
+                            <i data-lucide="award" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <span class="text-3xl font-display font-extrabold text-gradient">100+ 間</span>
+                            <p class="text-xs font-semibold text-slate-400 mt-1">企業與學術合作單位</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl flex flex-col justify-between h-48">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-tech-mint">
+                            <i data-lucide="layers" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <span class="text-3xl font-display font-extrabold text-gradient">3合1</span>
+                            <p class="text-xs font-semibold text-slate-400 mt-1">AI × Data × Marketing 整合</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl flex flex-col justify-between h-48">
+                        <div class="w-10 h-10 rounded-xl bg-slate-500/10 flex items-center justify-center text-slate-700">
+                            <i data-lucide="heart-handshake" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <span class="text-3xl font-display font-extrabold text-slate-700">100%</span>
+                            <p class="text-xs font-semibold text-slate-400 mt-1">客製化營運賦能落地方案</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Biography Storyteller Text -->
+                <div class="lg:col-span-7 space-y-6 order-1 lg:order-2 text-slate-600 font-light leading-relaxed text-base sm:text-lg">
+                    <p class="font-medium text-tech-dark text-lg sm:text-xl">
+                        我是 <span class="font-bold underline decoration-tech-blue/30 decoration-2"></span>，臺灣行銷研究有限公司（TMR）創辦人，專注於 AI、資料科學與行銷策略應用的企業顧問與課程講師。
+                    </p>
+                    <p>
+                        在過去 8 年的資料科學與產業教學經驗中，我長期協助各大企業、學術單位與各界專業人士理解數據的本質。從底層的 Python 資料分析，到尖端的提示詞工程（Prompt Engineering）與 LLM 應用，我致力於提供<strong>「企業聽得懂、團隊學得會、現場用得上」</strong>的系統化培訓與專案顧問服務。
+                    </p>
+                    <p>
+                        我的核心價值在於消除技術與商業價值之間的巨大落差。無論是跨越金融、製造、醫療、文教，我都能協助您將分散的知識與流程整合為可衡量成效的智慧引擎。
+                    </p>
+
+                    <!-- Tech Tags -->
+                    <div class="flex flex-wrap gap-2.5 pt-4">
+                        <span class="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs font-semibold text-slate-500 shadow-sm flex items-center gap-1">
+                            <i data-lucide="binary" class="w-3.5 h-3.5 text-tech-blue"></i> Python Data Science
+                        </span>
+                        <span class="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs font-semibold text-slate-500 shadow-sm flex items-center gap-1">
+                            <i data-lucide="cpu" class="w-3.5 h-3.5 text-tech-purple"></i> Large Language Models
+                        </span>
+                        <span class="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs font-semibold text-slate-500 shadow-sm flex items-center gap-1">
+                            <i data-lucide="terminal" class="w-3.5 h-3.5 text-tech-mint"></i> Prompt Engineering
+                        </span>
+                        <span class="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs font-semibold text-slate-500 shadow-sm flex items-center gap-1">
+                            <i data-lucide="cloud" class="w-3.5 h-3.5 text-sky-500"></i> GCP Cloud Integration
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Brand Color Strategy Section -->
+    <section id="brand-color" class="relative py-28 z-20 px-6 bg-gradient-to-b from-white via-pink-50/30 to-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-100/60 border border-pink-200 text-pink-600 text-[11px] font-bold tracking-wider uppercase mb-3 font-display">
+                    Brand Color Strategy
+                </div>
+                <h2 class="text-3xl md:text-5xl font-display font-extrabold text-tech-dark tracking-tight">
+                    Dribbble 粉紅創意風格色彩設計
+                </h2>
+                <p class="text-xs text-slate-400 font-semibold tracking-wider uppercase mt-1 font-display">
+                    建構充滿活力、創新與溫暖的視覺品牌體驗
+                </p>
+                <div class="h-1.5 w-20 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full mt-4 mx-auto"></div>
+            </div>
+
+            <div class="grid gap-8 lg:grid-cols-[1.35fr_0.95fr]">
+                <div class="glass-card p-8 rounded-3xl border-slate-200/80 shadow-xl shadow-slate-200/60">
+                    <h3 class="text-xl font-semibold text-tech-dark mb-4">色彩策略</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed mb-4">
+                        依據 Dribbble 的創意設計美學，採用「玫瑰粉＋珊瑚橙＋紫色亮點＋白色留白」的配色邏輯，在第一眼傳達出品牌的現代感與活力：
+                    </p>
+                    <ul class="space-y-3 text-sm text-slate-600">
+                        <li class="flex gap-3">
+                            <span class="w-2.5 h-2.5 mt-2 rounded-full bg-pink-500"></span>
+                            <span><strong>創意溫暖：</strong>玫瑰粉主色象徵創新、設計感與人性化溫度。</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="w-2.5 h-2.5 mt-2 rounded-full bg-orange-400"></span>
+                            <span><strong>動能活力：</strong>珊瑚橙提升視覺躍動感，強調服務亮點與成長能量。</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="w-2.5 h-2.5 mt-2 rounded-full bg-purple-500"></span>
+                            <span><strong>前瞻亮點：</strong>紫色作為強調色，傳遞創新科技與未來前景。</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="w-2.5 h-2.5 mt-2 rounded-full bg-white border border-slate-300"></span>
+                            <span><strong>清爽留白：</strong>大量白色與淺灰提供視覺呼吸，凸顯設計細節。</span>
+                        </li>
+                    </ul>
+                    <div class="mt-8 rounded-3xl bg-gradient-to-r from-pink-50 to-purple-50 p-6 border border-pink-200">
+                        <p class="text-sm font-semibold text-tech-dark mb-2">品牌一致性建議</p>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            全站統一使用「玫瑰粉主體 + 珊瑚橙能量點 + 紫色創新強調 + 白色留白」。CTA 按鈕用漸層粉紫、標題用粉色、重點數據用橙色，打造「年輕創意、充滿溫度、勇於創新」的品牌調性。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid gap-6">
+                    <div class="glass-card p-8 rounded-3xl border-slate-200/80 shadow-xl shadow-slate-200/60">
+                        <h3 class="text-xl font-semibold text-tech-dark mb-6">核心色票</h3>
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="flex items-center gap-4 p-4 rounded-3xl bg-white border border-slate-200">
+                                <span class="w-16 h-16 rounded-2xl bg-[#EC4899] shadow-lg shadow-pink-400/25"></span>
+                                <div>
+                                    <div class="text-sm font-semibold text-tech-dark">主色：創意粉 / Rose Pink</div>
+                                    <div class="text-xs text-slate-500 mt-1">#EC4899</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 p-4 rounded-3xl bg-white border border-slate-200">
+                                <span class="w-16 h-16 rounded-2xl bg-[#F97316] shadow-lg shadow-orange-400/25"></span>
+                                <div>
+                                    <div class="text-sm font-semibold text-tech-dark">輔助色：珊瑚橙 / Vibrant Orange</div>
+                                    <div class="text-xs text-slate-500 mt-1">#F97316</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 p-4 rounded-3xl bg-white border border-slate-200">
+                                <span class="w-16 h-16 rounded-2xl bg-[#A855F7] shadow-lg shadow-purple-400/25"></span>
+                                <div>
+                                    <div class="text-sm font-semibold text-tech-dark">強調色：創新紫 / Magic Purple</div>
+                                    <div class="text-xs text-slate-500 mt-1">#A855F7</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 p-4 rounded-3xl bg-white border border-slate-200">
+                                <span class="w-16 h-16 rounded-2xl bg-[#FAF5FF] border border-slate-200"></span>
+                                <div>
+                                    <div class="text-sm font-semibold text-tech-dark">中性色：設計白 / Creative White</div>
+                                    <div class="text-xs text-slate-500 mt-1">#FAF5FF</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-card p-8 rounded-3xl border-slate-200/80 shadow-xl shadow-slate-200/60">
+                        <h3 class="text-xl font-semibold text-tech-dark mb-6">建議配色比例</h3>
+                        <div class="flex flex-col lg:flex-row items-center gap-6">
+                            <div class="w-full max-w-[300px] mx-auto">
+                                <svg viewBox="0 0 240 240" class="w-full h-auto">
+                                    <circle cx="120" cy="120" r="90" fill="#F5F3FF"/>
+                                    <path d="M120 30 A90 90 0 0 1 212.2 74.7 L171.5 105.9 A45 45 0 0 0 120 75 Z" fill="#EC4899"/>
+                                    <path d="M212.2 74.7 A90 90 0 0 1 195 199.8 L145.5 170.3 A45 45 0 0 0 171.5 105.9 Z" fill="#F97316"/>
+                                    <path d="M195 199.8 A90 90 0 0 1 120 210 L120 120 A45 45 0 0 0 145.5 170.3 Z" fill="#FAF5FF"/>
+                                    <circle cx="120" cy="120" r="40" fill="#ffffff" stroke="#E9D5FF" stroke-width="4"/>
+                                </svg>
+                            </div>
+                            <div class="flex-1 space-y-4">
+                                <div class="flex items-center gap-3">
+                                    <span class="w-3.5 h-3.5 rounded-full bg-[#FAF5FF] border border-purple-200"></span>
+                                    <div>
+                                        <div class="text-sm font-semibold text-tech-dark">60% 中性底色</div>
+                                        <div class="text-xs text-slate-500">白色與淺紫灰底色，提升設計空間感與呼吸感。</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="w-3.5 h-3.5 rounded-full bg-[#EC4899]"></span>
+                                    <div>
+                                        <div class="text-sm font-semibold text-tech-dark">30% 主體色系</div>
+                                        <div class="text-xs text-slate-500">玫瑰粉用於標題、區塊與品牌識別，溫暖親切。</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="w-3.5 h-3.5 rounded-full bg-[#F97316]"></span>
+                                    <div>
+                                        <div class="text-sm font-semibold text-tech-dark">10% 強調色</div>
+                                        <div class="text-xs text-slate-500">橙色 + 紫色用於 CTA、亮點與互動，增強視覺活力。</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. AI Solutions Section -->
+    <section id="solutions" class="relative py-28 z-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <!-- Section Header -->
+            <div class="text-center mb-20">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 border border-purple-100 text-tech-purple text-[11px] font-bold tracking-wider uppercase mb-3 font-display">
+                    AI Solutions
+                </div>
+                <h2 class="text-3xl md:text-5xl font-display font-extrabold text-tech-dark tracking-tight">
+                    核心數位與 AI 解決方案
+                </h2>
+                <p class="text-xs text-slate-400 font-semibold tracking-wider uppercase mt-1 font-display">
+                    Practical AI Solutions for Business Growth
+                </p>
+                <div class="h-1.5 w-20 bg-gradient-to-r from-tech-blue to-tech-purple rounded-full mt-4 mx-auto"></div>
+            </div>
+
+            <!-- Two Sub-categories Layout -->
+            <div class="space-y-16">
+                <!-- A. 技術導入與自動化服務 -->
+                <div>
+                    <h3 class="text-xl sm:text-2xl font-display font-extrabold text-tech-dark flex items-center gap-2 mb-8 border-l-4 border-tech-blue pl-3">
+                        <span>A. 技術導入與自動化服務</span>
+                        <span class="text-xs font-medium text-slate-400 tracking-wider">Tech Integration</span>
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                        <!-- Solution Card 1 -->
+                        <div class="glass-card p-6 rounded-2xl flex flex-col justify-between h-[280px]">
+                            <div class="space-y-4">
+                                <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-tech-blue">
+                                    <i data-lucide="message-square" class="w-6 h-6"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-tech-dark">客製化 Chatbot 開發</h4>
+                                <p class="text-xs text-slate-500 font-light leading-relaxed">
+                                    應用於客服、銷售、內部知識查詢與自動流程引導。
+                                </p>
+                            </div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-tech-blue">Automated Chat</span>
+                        </div>
+
+                        <!-- Solution Card 2 -->
+                        <div class="glass-card p-6 rounded-2xl flex flex-col justify-between h-[280px]">
+                            <div class="space-y-4">
+                                <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-tech-blue">
+                                    <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-tech-dark">企業 AI 教育訓練</h4>
+                                <p class="text-xs text-slate-500 font-light leading-relaxed">
+                                    協助團隊系統化建立 AI 工具應用力與落地的實戰思維。
+                                </p>
+                            </div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-tech-blue">Corporate Training</span>
+                        </div>
+
+                        <!-- Solution Card 3 -->
+                        <div class="glass-card p-6 rounded-2xl flex flex-col justify-between h-[280px]">
+                            <div class="space-y-4">
+                                <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-tech-blue">
+                                    <i data-lucide="workflow" class="w-6 h-6"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-tech-dark">流程自動化 RPA</h4>
+                                <p class="text-xs text-slate-500 font-light leading-relaxed">
+                                    完美整合重複性高的日常行政、報表統整與大數據處理任務。
+                                </p>
+                            </div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-tech-blue">RPA Automation</span>
+                        </div>
+
+                        <!-- Solution Card 4 -->
+                        <div class="glass-card p-6 rounded-2xl flex flex-col justify-between h-[280px]">
+                            <div class="space-y-4">
+                                <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-tech-blue">
+                                    <i data-lucide="palette" class="w-6 h-6"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-tech-dark">AI 繪圖與設計輔助</h4>
+                                <p class="text-xs text-slate-500 font-light leading-relaxed">
+                                    協助設計部門快速產出大量視覺，實現高效率行銷測試。
+                                </p>
+                            </div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-tech-blue">Generative Design</span>
+                        </div>
+
+                        <!-- Solution Card 5 -->
+                        <div class="glass-card p-6 rounded-2xl flex flex-col justify-between h-[280px]">
+                            <div class="space-y-4">
+                                <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-tech-blue">
+                                    <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-tech-dark">分析架構與預測模型</h4>
+                                <p class="text-xs text-slate-500 font-light leading-relaxed">
+                                    運用機器學習分析市場走向，打造高前瞻性的智慧營運。
+                                </p>
+                            </div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-tech-blue">Predictive Modeling</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- B. AI 策略規劃與組織賦能 -->
+                <div>
+                    <h3 class="text-xl sm:text-2xl font-display font-extrabold text-tech-dark flex items-center gap-2 mb-8 border-l-4 border-tech-purple pl-3">
+                        <span>B. AI 策略規劃與組織賦能</span>
+                        <span class="text-xs font-medium text-slate-400 tracking-wider">Strategy & Enablement</span>
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                        <!-- Strategy Card 1 -->
+                        <div class="glass-card p-6 rounded-2xl flex flex-col justify-between h-[280px]">
+                            <div class="space-y-4">
+                                <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-tech-purple">
+                                    <i data-lucide="database" class="w-6 h-6"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-tech-dark">私有化知識庫建置</h4>
+                                <p class="text-xs text-slate-500 font-light leading-relaxed">
+                                    將內部文件、教案、流程沉澱為隨時可高防護查閱的智慧資產。
+                                </p>
+                            </div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-tech-purple">Enterprise KM</span>
+                        </div>
+
+                        <!-- Strategy Card 2 -->
+                        <div class="glass-card p-6 rounded-2xl flex flex-col justify-between h-[280px]">
+                            <div class="space-y-4">
+                                <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-tech-purple">
+                                    <i data-lucide="users" class="w-6 h-6"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-tech-dark">從 0 到 1 團隊建置</h4>
+                                <p class="text-xs text-slate-500 font-light leading-relaxed">
+                                    輔導人才配置、導入敏捷開發流程與核心商業應用場景。
+                                </p>
+                            </div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-tech-purple">Team Setup</span>
+                        </div>
+
+                        <!-- Strategy Card 3 -->
+                        <div class="glass-card p-6 rounded-2xl flex flex-col justify-between h-[280px]">
+                            <div class="space-y-4">
+                                <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-tech-purple">
+                                    <i data-lucide="funnel" class="w-6 h-6"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-tech-dark">自動化行銷漏斗設計</h4>
+                                <p class="text-xs text-slate-500 font-light leading-relaxed">
+                                    極致整合內容生產、名單捕獲、追蹤反饋與動態轉換。
+                                </p>
+                            </div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-tech-purple">Marketing Funnel</span>
+                        </div>
+
+                        <!-- Strategy Card 4 -->
+                        <div class="glass-card p-6 rounded-2xl flex flex-col justify-between h-[280px]">
+                            <div class="space-y-4">
+                                <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-tech-purple">
+                                    <i data-lucide="map" class="w-6 h-6"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-tech-dark">導入場景路線圖規劃</h4>
+                                <p class="text-xs text-slate-500 font-light leading-relaxed">
+                                    診斷現有營運痛點，給予最符合 ROI、可漸進落地的規劃書。
+                                </p>
+                            </div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-tech-purple">AI Roadmap</span>
+                        </div>
+
+                        <!-- Strategy Card 5 -->
+                        <div class="glass-card p-6 rounded-2xl flex flex-col justify-between h-[280px]">
+                            <div class="space-y-4">
+                                <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-tech-purple">
+                                    <i data-lucide="trending-up" class="w-6 h-6"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-tech-dark">AI × 數據行銷策略</h4>
+                                <p class="text-xs text-slate-500 font-light leading-relaxed">
+                                    讓 AI 不只是噱頭，而是真正驅動營運增長與商務升級的引擎。
+                                </p>
+                            </div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-tech-purple">Growth Engine</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Case Studies Section -->
+    <section id="cases" class="relative py-28 z-20 px-6 bg-slate-50/40">
+        <div class="max-w-7xl mx-auto">
+            <!-- Section Header -->
+            <div class="text-center mb-20">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-tech-mint text-[11px] font-bold tracking-wider uppercase mb-3 font-display">
+                    Case Studies
+                </div>
+                <h2 class="text-3xl md:text-5xl font-display font-extrabold text-tech-dark tracking-tight">
+                    引領創新的實戰成果
+                </h2>
+                <p class="text-xs text-slate-400 font-semibold tracking-wider uppercase mt-1 font-display">
+                    From AI Learning to Business Impact
+                </p>
+                <div class="h-1.5 w-20 bg-gradient-to-r from-tech-blue to-tech-purple rounded-full mt-4 mx-auto"></div>
+            </div>
+
+            <!-- Case Studies Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <!-- Case 1: Private KM -->
+                <div class="glass-card overflow-hidden rounded-2xl border border-slate-200/50 flex flex-col md:flex-row h-full">
+                    <div class="p-8 flex flex-col justify-between h-full space-y-6 md:w-1/2">
+                        <span class="text-xs font-semibold uppercase tracking-widest text-tech-blue font-display">企業知識管理</span>
+                        <h3 class="text-2xl font-display font-extrabold text-tech-dark leading-snug">跨國集團私有化 AI 知識庫與助理</h3>
+                        
+                        <div class="space-y-2 text-xs text-slate-500">
+                            <p><strong>痛點 (Problem)</strong>：營運多年的加盟、行銷、產品手冊繁複分散，新員工上手慢、查詢手冊耗費高昂時間成本。</p>
+                            <p><strong>方案 (Solution)</strong>：導入安全型私有化 AI 智能知識庫，提供智能提示詞與模糊查詢系統。</p>
+                            <p><strong>成果 (Result)</strong>：新進人員第一線培訓自主率提升 50%，平均客服與營運手冊檢索時間縮短 85%。</p>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2.5 py-1 bg-blue-50 text-[10px] font-bold text-tech-blue rounded">私有化 AI 引擎</span>
+                            <span class="px-2.5 py-1 bg-purple-50 text-[10px] font-bold text-tech-purple rounded">SOP 知識化</span>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-tr from-blue-500/10 to-purple-500/10 md:w-1/2 flex items-center justify-center p-8 border-t md:border-t-0 md:border-l border-slate-100">
+                        <div class="p-6 bg-white/85 rounded-2xl shadow-sm border border-slate-100/80 w-full space-y-3">
+                            <div class="flex items-start gap-2">
+                                <div class="w-6 h-6 rounded-full bg-tech-blue/10 flex items-center justify-center text-[10px] text-tech-blue font-bold">問</div>
+                                <div class="bg-slate-100 p-2 rounded-lg text-xs text-slate-600">如何快速調取 Q3 化工銷售策略與 SOP 手冊？</div>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <div class="w-6 h-6 rounded-full bg-tech-mint/10 flex items-center justify-center text-[10px] text-tech-mint font-bold">AI</div>
+                                <div class="bg-emerald-50/50 p-2.5 rounded-lg text-xs text-slate-700 border border-emerald-100/50">已為您在知識庫中檢索出 2 篇精準 SOP。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Case 2: Corporate Training -->
+                <div class="glass-card overflow-hidden rounded-2xl border border-slate-200/50 flex flex-col md:flex-row h-full">
+                    <div class="p-8 flex flex-col justify-between h-full space-y-6 md:w-1/2">
+                        <span class="text-xs font-semibold uppercase tracking-widest text-tech-purple font-display">企業教育訓練</span>
+                        <h3 class="text-2xl font-display font-extrabold text-tech-dark leading-snug">上市公司客製化 AI 工具實戰內訓</h3>
+                        
+                        <div class="space-y-2 text-xs text-slate-500">
+                            <p><strong>痛點 (Problem)</strong>：內部團隊雖訂購大量 AI 授權，但各部門缺乏應用思維，流於一般日常閒聊，產出無效。</p>
+                            <p><strong>方案 (Solution)</strong>：設計階段式實戰內訓工作坊，結合主管痛點，教授結構化 Prompt 框架。</p>
+                            <p><strong>成果 (Result)</strong>：受訓同仁成功撰寫出 30+ 款適用於日常業務的專用機器人，工作效率全面升級。</p>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2.5 py-1 bg-purple-50 text-[10px] font-bold text-tech-purple rounded">專案工作坊</span>
+                            <span class="px-2.5 py-1 bg-emerald-50 text-[10px] font-bold text-tech-mint rounded">Prompt 工程</span>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-tr from-purple-500/10 to-emerald-500/10 md:w-1/2 flex items-center justify-center p-8 border-t md:border-t-0 md:border-l border-slate-100">
+                        <div class="p-6 bg-white/85 rounded-2xl shadow-sm border border-slate-100/80 w-full text-center space-y-3">
+                            <div class="text-slate-400 text-[10px] uppercase font-bold">訓練進度與滿意度</div>
+                            <div class="flex justify-around items-center">
+                                <div class="relative w-16 h-16 rounded-full bg-slate-50 border-4 border-tech-blue flex items-center justify-center font-display font-extrabold text-sm text-tech-dark">
+                                    98%
+                                </div>
+                                <div class="text-left text-xs space-y-1">
+                                    <div>主辦單位：中華電信 / 資策會</div>
+                                    <div>完訓率：100%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Case 3: Marketing Data Science -->
+                <div class="glass-card overflow-hidden rounded-2xl border border-slate-200/50 flex flex-col md:flex-row h-full">
+                    <div class="p-8 flex flex-col justify-between h-full space-y-6 md:w-1/2">
+                        <span class="text-xs font-semibold uppercase tracking-widest text-tech-mint font-display">行銷資料科學</span>
+                        <h3 class="text-2xl font-display font-extrabold text-tech-dark leading-snug">行銷大數據庫與科學漏斗系統架構</h3>
+                        
+                        <div class="space-y-2 text-xs text-slate-500">
+                            <p><strong>痛點 (Problem)</strong>：廣告成效混亂、分散在多個平台，難以從宏觀追蹤用戶生命週期並精準再行銷。</p>
+                            <p><strong>方案 (Solution)</strong>：整合 Python 資料分析架構，提供視覺化數據看板與預測模型。</p>
+                            <p><strong>成果 (Result)</strong>：客戶取得清晰的行銷歸因模型，整體獲客成本下降 25%，高價值顧客回購率提高 18%。</p>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2.5 py-1 bg-emerald-50 text-[10px] font-bold text-tech-mint rounded">數據看板</span>
+                            <span class="px-2.5 py-1 bg-blue-50 text-[10px] font-bold text-tech-blue rounded">機器學習</span>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-tr from-emerald-500/10 to-blue-500/10 md:w-1/2 flex items-center justify-center p-8 border-t md:border-t-0 md:border-l border-slate-100">
+                        <div class="p-6 bg-white/85 rounded-2xl shadow-sm border border-slate-100/80 w-full space-y-2">
+                            <div class="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-tech-blue to-tech-purple rounded-full" style="width: 75%"></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 text-center text-xs">
+                                <div class="bg-slate-50 p-2 rounded">
+                                    <div class="font-bold text-slate-700">-25%</div>
+                                    <div class="text-[9px] text-slate-400">行銷獲客成本</div>
+                                </div>
+                                <div class="bg-slate-50 p-2 rounded">
+                                    <div class="font-bold text-slate-700">+18%</div>
+                                    <div class="text-[9px] text-slate-400">精準再行銷回購</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Case 4: Automations -->
+                <div class="glass-card overflow-hidden rounded-2xl border border-slate-200/50 flex flex-col md:flex-row h-full">
+                    <div class="p-8 flex flex-col justify-between h-full space-y-6 md:w-1/2">
+                        <span class="text-xs font-semibold uppercase tracking-widest text-slate-500 font-display">AI 自動化</span>
+                        <h3 class="text-2xl font-display font-extrabold text-tech-dark leading-snug">全鏈路內容與名單追蹤自動化流程</h3>
+                        
+                        <div class="space-y-2 text-xs text-slate-500">
+                            <p><strong>痛點 (Problem)</strong>：業務名單手動錄入混亂，內容行銷排程繁雜，人力消耗嚴重、出錯率高。</p>
+                            <p><strong>方案 (Solution)</strong>：運用 Make 與 LLM 串接，建立「內容自動化產出 - 社群排程 - 名單篩選」迴圈。</p>
+                            <p><strong>成果 (Result)</strong>：內容團隊週產量提升 3 倍，名單回覆漏失率歸零，自動化名單預篩選成效卓越。</p>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2.5 py-1 bg-slate-100 text-[10px] font-bold text-slate-500 rounded">全自動名單</span>
+                            <span class="px-2.5 py-1 bg-blue-50 text-[10px] font-bold text-tech-blue rounded">自動化工作流</span>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-tr from-slate-500/10 to-blue-500/10 md:w-1/2 flex items-center justify-center p-8 border-t md:border-t-0 md:border-l border-slate-100">
+                        <div class="p-6 bg-white/85 rounded-2xl shadow-sm border border-slate-100/80 w-full text-center space-y-2">
+                            <div class="text-slate-400 text-[10px] font-bold uppercase">內容生產漏斗</div>
+                            <div class="flex justify-around items-end h-16 pt-2">
+                                <div class="w-8 bg-slate-200 h-10 rounded-t text-[10px] text-slate-500 pt-1">社群</div>
+                                <div class="w-8 bg-tech-blue h-16 rounded-t text-[10px] text-white pt-1">篩選</div>
+                                <div class="w-8 bg-tech-mint h-12 rounded-t text-[10px] text-white pt-1">轉單</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Technical Blog Section -->
+    <section id="blog" class="relative py-28 z-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <!-- Section Header -->
+            <div class="text-center mb-20">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-tech-blue text-[11px] font-bold tracking-wider uppercase mb-3 font-display">
+                    Tech Insights
+                </div>
+                <h2 class="text-3xl md:text-5xl font-display font-extrabold text-tech-dark tracking-tight">
+                    技術與行銷趨勢洞察
+                </h2>
+                <p class="text-xs text-slate-400 font-semibold tracking-wider uppercase mt-1 font-display">
+                    Insights on AI, Data Science and Marketing Strategy
+                </p>
+                <div class="h-1.5 w-20 bg-gradient-to-r from-tech-blue to-tech-purple rounded-full mt-4 mx-auto"></div>
+            </div>
+
+            <!-- Blog Post Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Post 1 -->
+                <article class="glass-card p-8 rounded-2xl flex flex-col justify-between h-[400px] group/post">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between text-xs text-slate-400">
+                            <span class="px-2.5 py-1 bg-blue-50 text-[10px] font-bold text-tech-blue rounded">AI 導入策略</span>
+                            <span>2026 / 04 / 22</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-tech-dark group-hover/post:text-tech-blue transition-colors leading-snug">
+                            企業導入 AI 前，最該先釐清的三件事
+                        </h3>
+                        <p class="text-sm text-slate-500 font-light leading-relaxed line-clamp-4">
+                            工具買好買滿，為什麼團隊依然在瞎忙？釐清業務痛點的優先級、規劃資料權限、並盤點工作流中的高重複性任務。這比急著買昂貴系統更關鍵...
+                        </p>
+                    </div>
+                    <a href="#consultation" class="flex items-center text-xs font-bold text-tech-blue gap-1 pt-4 hover:text-tech-purple">
+                        <span>閱讀全文</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 transition-transform group-hover/post:translate-x-1"></i>
+                    </a>
+                </article>
+
+                <!-- Post 2 -->
+                <article class="glass-card p-8 rounded-2xl flex flex-col justify-between h-[400px] group/post">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between text-xs text-slate-400">
+                            <span class="px-2.5 py-1 bg-purple-50 text-[10px] font-bold text-tech-purple rounded">提示詞工程</span>
+                            <span>2026 / 03 / 15</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-tech-dark group-hover/post:text-tech-blue transition-colors leading-snug">
+                            從 Prompt Engineering 到 AI Workflow：企業如何真正提升效率
+                        </h3>
+                        <p class="text-sm text-slate-500 font-light leading-relaxed line-clamp-4">
+                            別再將 AI 當作聊天機器人。一個真正能協助企業自動化的流程，必須是多節點、結構化輸出並互相鏈接的工作流，而非單次的 Prompt 嘗試...
+                        </p>
+                    </div>
+                    <a href="#consultation" class="flex items-center text-xs font-bold text-tech-blue gap-1 pt-4 hover:text-tech-purple">
+                        <span>閱讀全文</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 transition-transform group-hover/post:translate-x-1"></i>
+                    </a>
+                </article>
+
+                <!-- Post 3 -->
+                <article class="glass-card p-8 rounded-2xl flex flex-col justify-between h-[400px] group/post">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between text-xs text-slate-400">
+                            <span class="px-2.5 py-1 bg-emerald-50 text-[10px] font-bold text-tech-mint rounded">行銷資料科學</span>
+                            <span>2026 / 02 / 28</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-tech-dark group-hover/post:text-tech-blue transition-colors leading-snug">
+                            為什麼行銷決策需要資料科學，而不只是經驗
+                        </h3>
+                        <p class="text-sm text-slate-500 font-light leading-relaxed line-clamp-4">
+                            當市場進入精準投放時代，依賴直覺的傳統決策面臨高昂的浪費。行銷資料科學能幫你找出沈默的大多數、建立用戶生命週期價值預測模型...
+                        </p>
+                    </div>
+                    <a href="#consultation" class="flex items-center text-xs font-bold text-tech-blue gap-1 pt-4 hover:text-tech-purple">
+                        <span>閱讀全文</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 transition-transform group-hover/post:translate-x-1"></i>
+                    </a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Booking Consultation Section (CTA) -->
+    <section id="consultation" class="relative py-32 z-20 px-6 overflow-hidden">
+        <div class="max-w-4xl mx-auto text-center relative z-20">
+            <!-- Glassmorphic layout with custom subtle colored border glow -->
+            <div class="glass-card py-16 px-8 sm:px-16 rounded-3xl border border-slate-200/60 relative overflow-hidden shadow-2xl">
+                <!-- Inner soft radial glow background -->
+                <div class="absolute inset-0 bg-gradient-to-tr from-blue-50/15 via-white/50 to-purple-50/15 -z-10"></div>
+                
+                <div class="flex flex-col items-center">
+                    <!-- Action Badge/Icon -->
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-tech-blue to-tech-purple flex items-center justify-center text-white shadow-xl shadow-blue-500/20 mb-8 animate-float">
+                        <i data-lucide="calendar" class="w-8 h-8"></i>
+                    </div>
+
+                    <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-tech-dark tracking-tight mb-4">
+                        預約 AI 轉型諮詢
+                    </h2>
+                    
+                    <p class="text-slate-500 font-light max-w-xl leading-relaxed mb-12 text-sm sm:text-base">
+                        如果您的企業正在思考如何導入 AI、建立資料分析能力、設計自動化流程，或希望讓團隊真正掌握 AI 工具，歡迎預約一次初步線上諮詢。
+                    </p>
+
+                    <!-- Consulting Pillars Group Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full mb-12 text-left">
+                        <div class="bg-white/50 p-4 rounded-xl border border-slate-100 flex items-center gap-3">
+                            <i data-lucide="compass" class="w-5 h-5 text-tech-blue"></i>
+                            <span class="text-xs font-semibold text-slate-700">AI 導入落地策略</span>
+                        </div>
+                        <div class="bg-white/50 p-4 rounded-xl border border-slate-100 flex items-center gap-3">
+                            <i data-lucide="graduation-cap" class="w-5 h-5 text-tech-purple"></i>
+                            <span class="text-xs font-semibold text-slate-700">企業實務教育培訓</span>
+                        </div>
+                        <div class="bg-white/50 p-4 rounded-xl border border-slate-100 flex items-center gap-3">
+                            <i data-lucide="cpu" class="w-5 h-5 text-tech-mint"></i>
+                            <span class="text-xs font-semibold text-slate-700">工作流自動化建置</span>
+                        </div>
+                    </div>
+
+                    <!-- Booking Direct Google Calendar Button Link -->
+                    <a href="https://calendar.app.google/QZTvS9433tJHJcwT6" target="_blank" rel="noopener noreferrer" class="group relative inline-flex items-center justify-center px-12 py-5 font-display font-bold text-white rounded-xl shadow-xl shadow-blue-500/15 overflow-hidden bg-gradient-to-r from-tech-blue to-tech-purple hover:scale-[1.02] transition-transform duration-300">
+                        <span class="flex items-center gap-2.5">
+                            <span>立即預約線上諮詢</span>
+                            <i data-lucide="external-link" class="w-4 h-4 transition-transform group-hover:translate-x-1"></i>
+                        </span>
+                    </a>
+
+                    <!-- Live Calendar Availability Text status -->
+                    <p class="text-[10px] text-slate-400 font-semibold tracking-widest uppercase mt-4">
+                        Available via Google Calendar Scheduler
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Footer -->
+    <footer class="relative py-12 z-20 border-t border-slate-100 bg-white">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            <!-- Brand metadata -->
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-tech-blue to-tech-purple flex items-center justify-center text-white text-xs font-black shadow-md shadow-blue-500/10">
+                    H
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-display font-extrabold text-tech-dark text-xs">黃小球</span>
+                    <span class="text-[9px] text-slate-400">Founder of Taiwan Marketing Research Co., Ltd.</span>
+                </div>
+            </div>
+
+            <!-- Copyright and Role details -->
+            <div class="text-center md:text-right text-[11px] text-slate-400 leading-relaxed font-light">
+                <p>AI Consultant｜Prompt Engineer｜AI Product Manager</p>
+                <p class="mt-1">© 2026 Howard Chung. All rights reserved.</p>
+                <p class="mt-1">服務電話: 02-2223333</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Vanilla Javascript Logic -->
+    <script>
+        // Initialize Lucide Icons for clean vectors
+        lucide.createIcons();
+
+        // Mobile Drawer Hamburger Menu logic
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function toggleMobileMenu() {
+            const isHidden = mobileMenu.classList.contains('hidden');
+            if (isHidden) {
+                mobileMenu.classList.remove('hidden');
+                // Allow CSS transition to fire
+                mobileMenu.offsetHeight;
+                mobileMenu.classList.remove('opacity-0');
+                menuBtn.innerHTML = `<i data-lucide="x" class="w-6 h-6"></i>`;
+            } else {
+                mobileMenu.classList.add('opacity-0');
+                menuBtn.innerHTML = `<i data-lucide="menu" class="w-6 h-6"></i>`;
+                setTimeout(() => {
+                    mobileMenu.classList.add('hidden');
+                }, 300);
+            }
+            lucide.createIcons();
+        }
+
+        menuBtn.addEventListener('click', toggleMobileMenu);
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (!mobileMenu.classList.contains('hidden')) {
+                    toggleMobileMenu();
+                }
+            });
+        });
+
+        // Smooth Navbar Shrink/Blur Scroll Styling trigger
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 40) {
+                navbar.classList.add('nav-scrolled');
+            } else {
+                navbar.classList.remove('nav-scrolled');
+            }
+        });
+
+        // Elegant Dynamic Typewriter on Main Title
+        const typewriterText = "Until Marketing Data science is common sense";
+        const typewriterElement = document.getElementById('typewriter');
+        let textIndex = 0;
+
+        function runTypewriter() {
+            if (textIndex < typewriterText.length) {
+                typewriterElement.textContent += typewriterText.charAt(textIndex);
+                textIndex++;
+                setTimeout(runTypewriter, 65); // natural speed rate
+            }
+        }
+
+        // HTML5 Canvas Premium Node/Particle Mesh background system
+        const canvas = document.getElementById('tech-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let particles = [];
+        let mouse = {
+            x: null,
+            y: null,
+            radius: 110
+        };
+
+        function initCanvasSize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', () => {
+            initCanvasSize();
+            generateParticles();
+        });
+
+        // Track Mouse
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        window.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        class ParticleNode {
+            constructor(x, y, dx, dy, size, color) {
+                this.x = x;
+                this.y = y;
+                this.dx = dx;
+                this.dy = dy;
+                this.size = size;
+                this.color = color;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+
+            update() {
+                // Bounds collision handling
+                if (this.x > canvas.width || this.x < 0) {
+                    this.dx = -this.dx;
+                }
+                if (this.y > canvas.height || this.y < 0) {
+                    this.dy = -this.dy;
+                }
+
+                // Interactive mouse push mechanics
+                if (mouse.x !== null && mouse.y !== null) {
+                    let diffX = mouse.x - this.x;
+                    let diffY = mouse.y - this.y;
+                    let distance = Math.sqrt(diffX * diffX + diffY * diffY);
+                    if (distance < mouse.radius) {
+                        const forceDirectionX = diffX / distance;
+                        const forceDirectionY = diffY / distance;
+                        const maxForce = 2.0;
+                        const forceFactor = (mouse.radius - distance) / mouse.radius;
+                        const forceX = forceDirectionX * forceFactor * maxForce;
+                        const forceY = forceDirectionY * forceFactor * maxForce;
+
+                        this.x -= forceX;
+                        this.y -= forceY;
+                    }
+                }
+
+                this.x += this.dx;
+                this.y += this.dy;
+                this.draw();
+            }
+        }
+
+        function generateParticles() {
+            particles = [];
+            // Scale node numbers with viewport width for consistent performance
+            const densityFactor = Math.min(75, Math.floor((canvas.width * canvas.height) / 20000));
+            
+            for (let i = 0; i < densityFactor; i++) {
+                let size = (Math.random() * 2) + 0.6;
+                let x = Math.random() * (canvas.width - size * 2) + size;
+                let y = Math.random() * (canvas.height - size * 2) + size;
+                // Ultra-slow velocity vectors to avoid distraction
+                let dx = (Math.random() * 0.3) - 0.15;
+                let dy = (Math.random() * 0.3) - 0.15;
+                // Elegant translucent white/light-blue
+                let color = i % 2 === 0 ? 'rgba(37, 99, 235, 0.12)' : 'rgba(124, 58, 237, 0.12)';
+
+                particles.push(new ParticleNode(x, y, dx, dy, size, color));
+            }
+        }
+
+        // Web connections logic helper
+        function renderMeshLines() {
+            let lineAlpha = 1;
+            const maxDistance = 150;
+
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i; j < particles.length; j++) {
+                    let diffX = particles[i].x - particles[j].x;
+                    let diffY = particles[i].y - particles[j].y;
+                    let dist = Math.sqrt(diffX * diffX + diffY * diffY);
+
+                    if (dist < maxDistance) {
+                        lineAlpha = 1 - (dist / maxDistance);
+                        ctx.strokeStyle = `rgba(37, 99, 235, ${lineAlpha * 0.08})`;
+                        ctx.lineWidth = 0.6;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Main RAF Loop
+        function particleSystemLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+            }
+            renderMeshLines();
+            requestAnimationFrame(particleSystemLoop);
+        }
+
+        // Intersection Observer Scroll-reveal effects
+        const scrollSections = document.querySelectorAll('#about, #solutions, #cases, #blog, #consultation');
+        const observerConfig = {
+            root: null,
+            threshold: 0.1,
+            rootMargin: "0px"
+        };
+
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    observer.unobserve(entry.target); // Reveal only once
+                }
+            });
+        }, observerConfig);
+
+        scrollSections.forEach(section => {
+            section.classList.add('opacity-0', 'translate-y-10', 'transition-all', 'duration-[1000ms]', 'ease-[cubic-bezier(0.16,1,0.3,1)]');
+            revealObserver.observe(section);
+        });
+
+        // Initialize script logic on load
+        window.onload = function() {
+            initCanvasSize();
+            generateParticles();
+            particleSystemLoop();
+
+            // Fire typewriter
+            setTimeout(runTypewriter, 550);
+        };
+    </script>
+</body>
+</html>
+```
+eof
+
+### 💎 本次交付的代碼亮點：
+1. **結構非常乾淨 (Production-Ready)**：您可以直接複製整段 HTML 代碼儲存成 `index.html`，點擊兩下即可直接在瀏覽器運作。
+2. **頂級 SaaS 質感與排版**：首頁字體特別引進 Google Fonts 的 `Plus Jakarta Sans` 大標字，搭配乾淨的 `Inter` 本文，帶來與國外頂尖新創公司 Stripe 與 Linear 官網同級的極簡白科技感。
+3. **優異的互動效能**：Canvas 網格系統特別做過效能優化，並使用 `requestAnimationFrame` 在背景以極低的 CPU 佔用率緩慢運行；`IntersectionObserver` 漸現進場使整站滾動時感覺非常高雅。
+
+您可以點擊右側的 **Preview** 觀看實時展示。如有任何設計或排版細節想要微調，請隨時通知我！
