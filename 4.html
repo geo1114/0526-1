@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Howard Chung | AI MV 製作招商與跨域轉型</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN (優雅現代的圖標) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts (Inter / Plus Jakarta Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- 自訂 Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb', // 科技藍
+                        secondary: '#7c3aed', // 高級紫
+                        accent: '#10b981', // 薄荷綠
+                        'elegant-white': '#ffffff',
+                        'foggy-gray': '#f8fafc',
+                    },
+                    fontFamily: {
+                        jakarta: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <!-- 自訂 CSS：滿版 YouTube 背景 & 進場動畫 -->
+    <style>
+        /* 修復 YouTube 在 100vh 下滿版的問題 */
+        #video-background-container {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100vh;
+            overflow: hidden;
+            z-index: -2;
+        }
+        #video-background-container iframe {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 100vw; height: 100vh;
+            transform: translate(-50%, -50%);
+            /* 調整影片比例以確保覆蓋，可能需要依據影片調整 */
+            object-fit: cover;
+            /* 修復在某些瀏覽器下出現黑邊 */
+            aspect-ratio: 16 / 9;
+            min-width: 177.78vh; /* 16:9 ratio */
+        }
+        @media (min-aspect-ratio: 16/9) {
+            #video-background-container iframe {
+                height: 56.25vw;
+            }
+        }
+
+        /* 影片上方的霧面/模糊層，提升文字可讀性 */
+        .video-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100vh;
+            background: linear-gradient(
+                135deg, 
+                rgba(255, 255, 255, 0.8) 0%, 
+                rgba(248, 250, 252, 0.6) 50%, 
+                rgba(255, 255, 255, 0.9) 100%
+            );
+            backdrop-filter: blur(10px); /* 輕微霧面模糊 */
+            z-index: -1;
+        }
+
+        /* 玻璃擬態卡片 */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.03);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            box-shadow: 0 20px 50px rgba(37, 99, 235, 0.08);
+            border: 1px solid rgba(37, 99, 235, 0.1);
+        }
+
+        /* 滾動漸現動畫樣式 */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="font-inter bg-elegant-white text-slate-900 overflow-x-hidden">
+
+    <!-- 1. 滿版重複播放 YouTube 影片背景 -->
+    <div id="video-background-container">
+        <!-- 
+            YouTube IFrame 指令解析：
+            - LwLXRVJvMN0: 您提供的影片 ID
+            - autoplay=1: 自動播放
+            - loop=1: 重複播放
+            - playlist=LwLXRVJvMN0: 需要將影片ID放入 playlist 才能使 loop=1 在 iframe 下生效
+            - mute=1: 必須靜音才能在各瀏覽器自動播放
+            - controls=0: 隱承控制列
+            - modestbranding=1: 減少 YouTube 標誌
+            - fs=0: 停用全螢幕按鈕
+            - iv_load_policy=3: 停用影片註解
+            - playsinline=1: 在行動端瀏覽器內播放，不跳出影片播放器
+        -->
+        <iframe 
+            src="https://www.youtube.com/embed/LwLXRVJvMN0?autoplay=1&loop=1&playlist=LwLXRVJvMN0&mute=1&controls=0&modestbranding=1&fs=0&iv_load_policy=3&playsinline=1" 
+            frameborder="0" 
+            allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
+    </div>
+    <!-- 影片上方的透明層（確保文字可讀與玻璃效果） -->
+    <div class="video-overlay"></div>
+
+
+    <!-- 2. 頂部導覽列 (Navbar) -->
+    <nav class="fixed top-0 w-full z-50 bg-white/50 backdrop-blur-md border-b border-white/20">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <!-- 品牌 logo -->
+            <a href="#hero" class="flex items-center gap-2">
+                <i data-lucide="brain-circuit" class="w-8 h-8 text-primary"></i>
+                <span class="font-jakarta font-extrabold text-2xl text-slate-900">Howard <span class="text-secondary">Chung</span></span>
+            </a>
+            <!-- 桌機選單 -->
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#hero" class="text-sm font-medium text-slate-700 hover:text-primary transition">首頁</a>
+                <a href="#about" class="text-sm font-medium text-slate-700 hover:text-primary transition">關於招商</a>
+                <a href="#solutions" class="text-sm font-medium text-slate-700 hover:text-primary transition">合作方案</a>
+                <a href="#cases" class="text-sm font-medium text-slate-700 hover:text-primary transition">案例展示</a>
+                <a href="#booking" class="text-sm font-medium text-slate-700 hover:text-primary transition">預約諮詢</a>
+            </div>
+            <!-- 行動選單開關 -->
+            <button class="md:hidden p-2 rounded-full hover:bg-foggy-gray" id="mobile-menu-btn">
+                <i data-lucide="menu" class="w-6 h-6 text-slate-700"></i>
+            </button>
+        </div>
+    </nav>
+    <!-- 手機端隱藏選單 -->
+    <div class="fixed top-16 right-0 w-full h-screen bg-elegant-white z-40 transform translate-x-full transition-transform" id="mobile-menu">
+        <div class="flex flex-col items-center gap-6 pt-12 px-6">
+            <a href="#hero" class="mobile-nav-link">首頁</a>
+            <a href="#about" class="mobile-nav-link">關於招商</a>
+            <a href="#solutions" class="mobile-nav-link">合作方案</a>
+            <a href="#cases" class="mobile-nav-link">案例展示</a>
+            <a href="#booking" class="mobile-nav-link">預約諮詢</a>
+            <a href="https://calendar.app.google/tTLXbgiorydsRKX2A" target="_blank" class="w-full text-center py-3 bg-primary text-white rounded-xl font-semibold">立即投資</a>
+        </div>
+    </div>
+
+
+    <!-- 3. 首頁視覺區塊 (Hero Section) -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center pt-24 pb-16">
+        <div class="max-w-7xl mx-auto px-6 text-center z-10">
+            <!-- 高級標籤 -->
+            <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full border border-primary/20 bg-primary/5 text-primary text-sm font-medium mb-8">
+                <i data-lucide="clapperboard" class="w-4 h-4"></i>
+                AI MV 製作招商 | Howard Chung
+            </div>
+
+            <!-- 主標題 (打字機效果區塊) -->
+            <h1 class="font-jakarta font-extrabold text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tighter leading-none mb-10 text-slate-950">
+                AI 音樂影片製作 <br> <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">跨域轉型投資</span>
+            </h1>
+
+            <!-- 英文副標題 -->
+            <p class="font-inter text-xl md:text-2xl text-slate-800 max-w-4xl mx-auto mb-10 leading-relaxed font-medium">
+                We are pioneering <span class="font-semibold text-secondary">AI-driven MV production</span>, merging creativity and technology to create highly efficient, scalable, and impactful music experiences. We invite you to explore this investment and strategic partnership opportunity.
+            </p>
+
+            <!-- 中文招商文案 -->
+            <p class="font-inter text-lg text-slate-700 max-w-3xl mx-auto mb-12 leading-relaxed">
+                鍾皓軒 (Howard) 將大數據行銷思維注入 AI 影像創作，致力於結合 **數據分析、AI 內容生成與跨域行銷思維**，打造更效率、更具影響力的音樂影片發展模式。我們正在尋求投資與戰略夥伴，一同發掘 AI MV 在娛樂、科技與行銷產業的潛能。
+            </p>
+
+            <!-- CTA 按鈕群 -->
+            <div class="flex flex-wrap items-center justify-center gap-6">
+                <!-- 主按鈕 -->
+                <a href="https://calendar.app.google/tTLXbgiorydsRKX2A" target="_blank" class="group relative px-10 py-5 bg-elegant-white rounded-full font-jakarta font-extrabold text-lg text-primary tracking-tight transition-all duration-300 hover:scale-105" id="hero-cta-main">
+                    <!-- Hover 的薄荷綠光暈 -->
+                    <div class="absolute inset-0 rounded-full border border-primary opacity-20 transition-opacity duration-300 group-hover:border-accent group-hover:opacity-100 group-hover:shadow-[0_0_20px_rgba(16,185,129,0.7)]"></div>
+                    <span class="relative z-10 flex items-center gap-2">
+                        <i data-lucide="invest" class="w-5 h-5"></i>
+                        預約 AI 轉型投資諮詢
+                    </span>
+                </a>
+                <!-- 次按鈕 -->
+                <a href="#solutions" class="group px-10 py-5 bg-foggy-gray rounded-full font-semibold text-slate-800 transition-all duration-300 hover:bg-slate-100 flex items-center gap-2">
+                    探索合作方案
+                    <i data-lucide="arrow-right" class="w-5 h-5 text-slate-500 transition-transform duration-300 group-hover:translate-x-1"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- 4. 關於鍾皓軒與招商優勢 (About) -->
+    <section id="about" class="py-24 bg-foggy-gray">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-[1.5fr,2fr] gap-16 items-center">
+                <!-- 左側：個人品牌簡介 (玻璃卡片) -->
+                <div class="glass-card p-10 reveal">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-r from-primary to-secondary p-1 mb-8 shadow-inner">
+                        <!-- 可以替換為您的照片 url(...) -->
+                        <div class="w-full h-full rounded-full bg-elegant-white flex items-center justify-center text-primary font-jakarta font-extrabold text-3xl">H</div>
+                    </div>
+                    <h3 class="font-jakarta font-bold text-3xl mb-3 tracking-tight text-slate-950">鍾皓軒 Howard Chung</h3>
+                    <p class="font-medium text-slate-600 mb-6">AI MV 製作與行銷數據顧問</p>
+                    <p class="font-inter text-slate-700 leading-relaxed">
+                        Howard 擁有超過 8 年資料科學與產業教學經驗，長期投入於 AI 科技行銷與數位轉型規劃。結合運動產業深厚經驗（12 年）、數據思維與內容創作，致力於用專業經驗協助更多企業突破傳統製作限制。
+                    </p>
+                </div>
+                
+                <!-- 左側：招商優勢與價值 (3x 卡片) -->
+                <div>
+                    <div class="flex items-center gap-3 mb-10">
+                        <i data-lucide="star" class="w-7 h-7 text-secondary"></i>
+                        <h2 class="font-jakarta font-extrabold text-4xl text-slate-950 tracking-tight">AI MV 製作的戰略價值</h2>
+                    </div>
+                    <div class="grid sm:grid-cols-2 gap-8">
+                        <div class="glass-card p-8 reveal" style="transition-delay: 100ms;">
+                            <i data-lucide="clock" class="w-10 h-10 text-primary mb-6"></i>
+                            <h4 class="font-jakarta font-bold text-xl mb-3">效率與成本突破</h4>
+                            <p class="text-sm text-slate-700 leading-relaxed">透過 AI 工具整合，大幅縮短傳統 MV 製作週期（從月縮短至週），同時降低硬體、場地與特效成本。</p>
+                        </div>
+                        <div class="glass-card p-8 reveal" style="transition-delay: 200ms;">
+                            <i data-lucide="target" class="w-10 h-10 text-primary mb-6"></i>
+                            <h4 class="font-jakarta font-bold text-xl mb-3">數據驅動創作</h4>
+                            <p class="text-sm text-slate-700 leading-relaxed">將行銷大數據融入影像創作策略，預測目標受眾喜好，打造具備更高傳播效率的音樂內容。</p>
+                        </div>
+                        <div class="glass-card p-8 reveal" style="transition-delay: 300ms;">
+                            <i data-lucide="rocket" class="w-10 h-10 text-secondary mb-6"></i>
+                            <h4 class="font-jakarta font-bold text-xl mb-3">跨域應用潛能</h4>
+                            <p class="text-sm text-slate-700 leading-relaxed">除了音樂影片，此 AI 製作鏈可跨域應用於企業宣傳、品牌形象、高規格內容生成與數位轉型顧問服務。</p>
+                        </div>
+                        <div class="glass-card p-8 reveal" style="transition-delay: 400ms;">
+                            <i data-lucide="brain-circuit" class="w-10 h-10 text-secondary mb-6"></i>
+                            <h4 class="font-jakarta font-bold text-xl mb-3">Howard 的專業背景</h4>
+                            <p class="text-sm text-slate-700 leading-relaxed">結合運動員精神與資料科學家思維，確保專案能穩健、效率地執行與突破。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- 5. 合作方案與投資諮詢 (Solutions) -->
+    <section id="solutions" class="py-24 bg-elegant-white">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="font-jakarta font-extrabold text-5xl mb-16 tracking-tight text-slate-950 reveal">探索 AI 音樂轉型合作方案</h2>
+            <div class="grid md:grid-cols-3 gap-10">
+                
+                <!-- 方案卡片 1 -->
+                <div class="glass-card p-10 flex flex-col items-center reveal" style="transition-delay: 100ms;">
+                    <div class="inline-flex px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-xs text-primary font-medium mb-6">#企業轉型</div>
+                    <i data-lucide="briefcase" class="w-12 h-12 text-primary mb-8"></i>
+                    <h4 class="font-jakarta font-bold text-2xl mb-4 tracking-tight">AI MV 製作顧問服務</h4>
+                    <p class="text-sm text-slate-700 mb-8 leading-relaxed">協助企業或團隊建置私有化 AI 製作鏈、從策略規劃、工具導入到流程優化，大幅提升組織內部效率與品牌影響力。</p>
+                </div>
+
+                <!-- 方案卡片 2 -->
+                <div class="glass-card p-10 flex flex-col items-center reveal border-2 border-primary" style="transition-delay: 200ms;">
+                    <div class="absolute -top-3 px-4 py-1.5 rounded-full bg-primary text-white text-xs font-semibold">首選合作</div>
+                    <div class="inline-flex px-3 py-1 rounded-full border border-secondary/20 bg-secondary/5 text-xs text-secondary font-medium mb-6">#數據驅動</div>
+                    <i data-lucide="zap" class="w-12 h-12 text-secondary mb-8"></i>
+                    <h4 class="font-jakarta font-bold text-2xl mb-4 tracking-tight">行銷自動化漏斗設計</h4>
+                    <p class="text-sm text-slate-700 mb-8 leading-relaxed">整合 AI 內容生成（MV）、名單、銷售與數據追蹤，協助企業透過數據思維與創新工具提升競爭力，將流量轉化為實際業績。</p>
+                </div>
+
+                <!-- 方案卡片 3 -->
+                <div class="glass-card p-10 flex flex-col items-center reveal" style="transition-delay: 300ms;">
+                    <div class="inline-flex px-3 py-1 rounded-full border border-accent/20 bg-accent/5 text-xs text-accent font-medium mb-6">#跨域整合</div>
+                    <i data-lucide="globe" class="w-12 h-12 text-accent mb-8"></i>
+                    <h4 class="font-jakarta font-bold text-2xl mb-4 tracking-tight">從 0 到 1 AI 團隊建置</h4>
+                    <p class="text-sm text-slate-700 mb-8 leading-relaxed">提供完整 AI 影像與數據團隊建置顧問服務，從策略規劃、架構、訓練到品牌發展，創造全新可能與影響力。</p>
+                </div>
+            </div>
+            <!-- 按鈕 -->
+            <div class="mt-16 reveal">
+                <a href="https://calendar.app.google/tTLXbgiorydsRKX2A" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-10 py-5 bg-elegant-white text-primary rounded-full font-jakarta font-extrabold text-lg transition hover:scale-105 border border-primary" id="hero-cta-main">
+                    <i data-lucide="invest" class="w-5 h-5"></i>
+                    立即預約投資諮詢
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- 6. 案例展示 (Cases) -->
+    <section id="cases" class="py-24 bg-foggy-gray">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="font-jakarta font-extrabold text-5xl mb-16 tracking-tight text-slate-950 reveal"> Howard Chung AI MV 案例與實戰展示 </h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 案例卡片 1 -->
+                <div class="glass-card overflow-hidden reveal" style="transition-delay: 100ms;">
+                    <!-- 此處使用背景圖片範例 -->
+                    <div class="w-full h-56 bg-slate-200">
+                        <!-- 可以替換為您的影片網址範例，例如YouTube/Vimeo/本地檔案 -->
+                         <div class="w-full h-full flex items-center justify-center text-slate-500 text-sm">此處展示案例 1</div>
+                    </div>
+                    <div class="p-8 text-left">
+                        <div class="inline-flex px-2 py-0.5 rounded bg-primary/10 text-primary text-xs font-medium mb-4">技術：AI Generated Video / Data Tech</div>
+                        <h4 class="font-jakarta font-bold text-xl mb-2">【數據行銷】AI MV 製作與行銷自動化</h4>
+                        <p class="text-sm text-slate-700 leading-relaxed">協助企業透過數據思維與創新工具提升競爭力，創造更大價值。</p>
+                    </div>
+                </div>
+                <!-- 案例卡片 2 -->
+                <div class="glass-card overflow-hidden reveal" style="transition-delay: 200ms;">
+                    <div class="w-full h-56 bg-slate-200">
+                         <div class="w-full h-full flex items-center justify-center text-slate-500 text-sm">此處展示案例 2</div>
+                    </div>
+                    <div class="p-8 text-left">
+                        <div class="inline-flex px-2 py-0.5 rounded bg-secondary/10 text-secondary text-xs font-medium mb-4">技術：AI Video Production / Digital Trans.</div>
+                        <h4 class="font-jakarta font-bold text-xl mb-2">從 0 到 1 AI 影像團隊建置顧問</h4>
+                        <p class="text-sm text-slate-700 leading-relaxed">提供從策略規劃、架構、訓練制度到品牌發展，完整解決方案。</p>
+                    </div>
+                </div>
+                 <!-- 案例卡片 3 -->
+                <div class="glass-card overflow-hidden reveal" style="transition-delay: 300ms;">
+                    <div class="w-full h-56 bg-slate-200">
+                         <div class="w-full h-full flex items-center justify-center text-slate-500 text-sm">此處展示案例 3</div>
+                    </div>
+                    <div class="p-8 text-left">
+                        <div class="inline-flex px-2 py-0.5 rounded bg-accent/10 text-accent text-xs font-medium mb-4">技術：Data Flow / AI Automation</div>
+                        <h4 class="font-jakarta font-bold text-xl mb-2">企業數位轉型與知識管理規劃</h4>
+                        <p class="text-sm text-slate-700 leading-relaxed">將知識、流程與經驗有效整合，提升組織效率與價值。</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 按鈕 -->
+            <div class="mt-16 reveal">
+                <a href="#booking" class="group inline-flex items-center gap-2 px-10 py-5 bg-foggy-gray text-slate-800 rounded-full font-semibold transition hover:bg-slate-100 flex items-center gap-2">
+                    立即預約諮詢
+                    <i data-lucide="arrow-right" class="w-5 h-5 text-slate-500 transition-transform duration-300 group-hover:translate-x-1"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- 7. 預約諮詢 (Booking) -->
+    <section id="booking" class="py-24 bg-elegant-white relative">
+        <div class="max-w-7xl mx-auto px-6 text-center z-10">
+            <h2 class="font-jakarta font-extrabold text-5xl mb-6 tracking-tight text-slate-950 reveal"> Howard Chung AI MV 跨域轉型諮詢 </h2>
+            <p class="text-lg text-slate-700 max-w-2xl mx-auto mb-16 leading-relaxed reveal">
+                我們致力於透過 **數據思維與創新工具** 為更多人發掘潛能。如果你或團隊正在思考如何透過 AI 影像創作、數據行銷或跨域整合推動商業模式升級，讓我們一同探索跨界融合的無限可能。
+            </p>
+            
+            <div class="max-w-4xl mx-auto grid sm:grid-cols-3 gap-10 mb-20 reveal">
+                <div class="glass-card p-10 flex flex-col items-center">
+                    <i data-lucide="briefcase" class="w-10 h-10 text-primary mb-6"></i>
+                    <h4 class="font-jakarta font-semibold text-lg mb-2">AI 顧問服務</h4>
+                </div>
+                 <div class="glass-card p-10 flex flex-col items-center border-2 border-primary">
+                    <i data-lucide="briefcase" class="w-10 h-10 text-primary mb-6"></i>
+                    <h4 class="font-jakarta font-semibold text-lg mb-2 text-primary">從 0 到 1 AI 影像團隊建置</h4>
+                </div>
+                 <div class="glass-card p-10 flex flex-col items-center">
+                    <i data-lucide="zap" class="w-10 h-10 text-secondary mb-6"></i>
+                    <h4 class="font-jakarta font-semibold text-lg mb-2">行銷自動化漏斗設計</h4>
+                </div>
+            </div>
+
+            <!-- CTA 按鈕 -->
+            <a href="https://calendar.app.google/tTLXbgiorydsRKX2A" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-10 py-5 bg-elegant-white text-primary rounded-full font-jakarta font-extrabold text-lg transition hover:scale-105 border border-primary reveal" id="hero-cta-main">
+                <i data-lucide="invest" class="w-5 h-5"></i>
+                立即預約投資諮詢
+            </a>
+        </div>
+    </section>
+
+    <!-- 8. Footer -->
+    <footer class="py-16 bg-foggy-gray">
+        <div class="max-w-7xl mx-auto px-6 text-center text-slate-600 text-sm">
+            <p class="mb-4">© 2026 Howard Chung. All rights reserved.</p>
+            <p>AI MV 製作與行銷數據顧問 | 將數據注入影像創作，創造更大價值。</p>
+        </div>
+    </footer>
+
+
+    <!-- 9. 原生 JavaScript: 打字機、RWD選單、滾動進場 -->
+    <script>
+        // 初始化 Lucide 圖標
+        lucide.createIcons();
+
+        // 9.1 RWD 行動端選單開合
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        let isMobileMenuOpen = false;
+
+        mobileMenuBtn.addEventListener('click', () => {
+            isMobileMenuOpen = !isMobileMenuOpen;
+            if (isMobileMenuOpen) {
+                mobileMenu.classList.remove('translate-x-full');
+            } else {
+                mobileMenu.classList.add('translate-x-full');
+            }
+        });
+
+        // 9.2 首頁打字機效果 (Typewriter)
+        const typewriterTextArr = ['跨域轉型投資', '智慧資產升級', '行銷大數據整合', '全新的可能性'];
+        const typewriterSpan = document.querySelector('#hero h1 span.bg-gradient-to-r');
+        let textIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let typeSpeed = 100;
+
+        function typeWriter() {
+            const currentText = typewriterTextArr[textIndex];
+            
+            if (isDeleting) {
+                typewriterSpan.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+                typeSpeed = 50; // 刪除速度加快
+            } else {
+                typewriterSpan.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+                typeSpeed = 100; // 打字速度
+            }
+
+            if (!isDeleting && charIndex === currentText.length) {
+                isDeleting = true;
+                typeSpeed = 2000; // 打完停留時間
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                textIndex = (textIndex + 1) % typewriterTextArr.length;
+                typeSpeed = 500; // 下一個詞開始前停頓
+            }
+
+            setTimeout(typeWriter, typeSpeed);
+        }
+        // 啟動打字機效果
+        setTimeout(typeWriter, 1000); // 載入後 1 秒開始
+
+
+        // 9.3 滾動漸現動畫 (Intersection Observer)
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // 進場後就停用
+                }
+            });
+        }, {
+            threshold: 0.2 // 卡片出現 20% 時啟動
+        });
+
+        reveals.forEach(reveal => {
+            observer.observe(reveal);
+        });
+
+        // 9.4 按鈕 Hover 文字變更特效 ( Ready to Connect )
+        const heroCtaMain = document.getElementById('hero-cta-main');
+        const defaultText = '<i data-lucide="invest" class="w-5 h-5"></i> 預約投資諮詢';
+        const readyText = 'Status: Ready to Connect';
+        
+        heroCtaMain.addEventListener('mouseenter', () => {
+            // 文字滑動上移
+            heroCtaMain.classList.add('transition-transform');
+            // 此處使用單純文字切換，更高級做法可參考第一個提示詞
+            // 這裡為了保持代碼乾淨，使用簡單切換
+            heroCtaMain.querySelector('.relative.z-10').textContent = readyText;
+            heroCtaMain.querySelector('.relative.z-10').classList.remove('gap-2');
+        });
+
+        heroCtaMain.addEventListener('mouseleave', () => {
+            // 文字還原
+             heroCtaMain.querySelector('.relative.z-10').innerHTML = defaultText;
+             // 重新應用 gap-2
+             heroCtaMain.querySelector('.relative.z-10').classList.add('gap-2');
+             // 重新初始化圖標
+             lucide.createIcons({
+                nameAttr: 'data-lucide',
+                icons: { invest: lucide.icons.invest }
+            });
+        });
+    </script>
+
+</body>
+</html>
